@@ -40,3 +40,23 @@ jobs:
           prefix: coverage
       - store_test_results:
           path: test-results.xml
+  save_hello_world_output:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: |
+          # echo "This is an output files" > output.txt
+      - persist_to_workspace:
+          root: .     # relative path to our working directory
+          paths: /output.txt
+  print_hello_world_output:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: |
+          # cat output.txt
+      - attach_workspace:
+          at: ./
+      
