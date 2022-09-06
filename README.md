@@ -6,6 +6,8 @@ See the [JavaScript language guide for CircleCI here](https://circleci.com/docs/
 
 ## Quickstart
 
+Just to trigger a neew build 
+
 ```
   npm install -g mern-cli
   mern init your_new_app
