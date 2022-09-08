@@ -1,5 +1,15 @@
 version: 2.1
 
+commands: # a reusable command with parameters
+  print_pipeline_id:
+    parameters:
+      to:
+        default: $CIRCLE_WORKFLOW_ID
+        type: string
+    steps:
+      - run: echo "Hello <<parameters.to>>"
+
+
 workflows:
   version: 2
   build:
@@ -14,6 +24,8 @@ jobs:
       - image: mongo:4.2.0
     steps:
       - checkout
+      - print_pipeline_id:
+          to: $CIRCLE_WORKFLOW_ID
       - run:
           name: update-npm
           command: 'sudo npm install -g npm@5'
