@@ -14,6 +14,7 @@ workflows:
   version: 2
   build:
     jobs:
+      - create_infrastructure
       - smoke_test
       # - configure_infrastructure
       # - create_infrastructure
@@ -21,22 +22,37 @@ workflows:
       
 
 jobs:
+  destroy_environment:
+  docker:
+      - image: amazon/aws-cli
+    steps:
+      - run:
+          name: Destroy environment
+          # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
+          # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
   smoke_test:
     docker:
       - image: alpine:latest
     steps:
       - run: apk add --update curl
+      # - run:
+      #     name: smoke test
+      #     command: |
+      #       URL="https://blog.udacity.com/"
+      #       # Test if website exists
+      #       if curl -s --head ${URL} 
+      #       then
+      #         return 0
+      #       else
+      #         return 1
+      #       fi
       - run:
-          name: smoke test
-          command: |
-            URL="https://blog.udacity.com/"
-            # Test if website exists
-            if curl -s --head ${URL} 
-            then
-              return 0
-            else
-              return 1
-            fi
+          name: Test job
+          command:  return 1
+      - destroy_environment  
   configure_infrastructure: 
     docker:
       - image: python:3.11-rc-alpine
