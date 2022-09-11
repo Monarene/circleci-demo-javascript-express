@@ -4,7 +4,7 @@ orbs:
   # Choose either one of the orbs below
   # Declare a dependency on the welcome-orb
   # welcome: circleci/welcome-orb@0.4.1
-  aws-cli: circleci/aws-cli@2.0.3
+  aws-cli: circleci/aws-cli@3.1.3
 # Orchestrate or schedule a set of jobs
 
 commands:
@@ -18,8 +18,6 @@ commands:
 
   # Exercise - Rollback
   destroy_environment:
-    docker:
-      - image: amazon/aws-cli
     steps:
       - run:
           name: Destroy environment
