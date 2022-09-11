@@ -14,11 +14,27 @@ workflows:
   version: 2
   build:
     jobs:
-      - create_infrastructure
+      - configure_infrastructure
       - build
       
 
 jobs:
+  configure_infrastructure: 
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["f0:82:59:4c:50:87:44:f8:c5:ed:8a:67:a6:ae:4a:d7"] # You can get this ID in the section where you registered the SSH Key
+      - run:
+          name: Install dependencies
+          command: |
+            # install the dependencies needed for your playbook
+            apk add --update ansible 
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook -i inventory.txt main.yml
   create_infrastructure: 
     docker:
       - image: amazon/aws-cli
