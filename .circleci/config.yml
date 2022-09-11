@@ -23,7 +23,7 @@ workflows:
 
 jobs:
   destroy_environment:
-  docker:
+    docker:
       - image: amazon/aws-cli
     steps:
       - run:
