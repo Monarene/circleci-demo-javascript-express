@@ -1,13 +1,31 @@
 version: 2.1
 
-commands: # a reusable command with parameters
+orbs:
+  # Choose either one of the orbs below
+  # Declare a dependency on the welcome-orb
+  # welcome: circleci/welcome-orb@0.4.1
+  aws-cli: circleci/aws-cli@2.0.3
+# Orchestrate or schedule a set of jobs
+
+commands:
+  # Exercise: Reusable Job Code
   print_pipeline_id:
     parameters:
-      to:
-        default: $CIRCLE_WORKFLOW_ID
+      id: 
         type: string
     steps:
-      - run: echo "Hello <<parameters.to>>"
+      - run: echo << parameters.id >>
+
+  # Exercise - Rollback
+  destroy_environment:
+    steps:
+      - run:
+          name: Destroy environment
+          # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
+          # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
 
 
 workflows:
@@ -22,17 +40,6 @@ workflows:
       
 
 jobs:
-  destroy_environment:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - run:
-          name: Destroy environment
-          # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
-          # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
   smoke_test:
     docker:
       - image: alpine:latest
