@@ -35,7 +35,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i inventory.txt main.yaml
+            ansible-playbook -i inventory.txt main.yaml --private-key ansible.pem
   create_infrastructure: 
     docker:
       - image: amazon/aws-cli
